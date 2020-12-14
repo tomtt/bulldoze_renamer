@@ -1,0 +1,4 @@
+#!/usr/bin/env bundle exec ruby
+
+require 'crude_renamer'
+CrudeRenamer::Shell.start(ARGV)

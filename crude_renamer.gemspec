@@ -1,17 +1,13 @@
-require_relative 'lib/practice_picker/version'
+require_relative 'lib/crude_renamer/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "practice_picker"
-  spec.version       = PracticePicker::VERSION
+  spec.name          = "crude_renamer"
+  spec.version       = CrudeRenamer::VERSION
   spec.authors       = ["Tom ten Thij"]
   spec.email         = ["code@tomtenthij.nl"]
 
-  spec.summary       = %q{Can pick items from a collection of things that the user needs to practice so it is learned optimally}
-  spec.homepage      = "https://github.com/tomtt/practice_picker"
+  spec.summary       = %q{A gem environment to learn code in}
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
-
-  spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = spec.homepage
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
@@ -21,6 +17,4 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-
-  spec.add_development_dependency 'guard-rspec'
 end
