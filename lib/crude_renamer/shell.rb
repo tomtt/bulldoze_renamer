@@ -3,7 +3,7 @@ require 'optparse'
 module CrudeRenamer
   class Shell
     BANNER = <<"EOT"
-usage: #{$0} CurrentNameInCamelCase TargetName
+usage: #{$0} path CurrentNameInCamelCase TargetName
 
 Will do a crude renaming of everything in the current directory
 you better be sure everything you run it on is checked into source
@@ -32,12 +32,13 @@ EOT
         end
       end.parse! argv
 
-      unless argv.size == 2
+      unless argv.size == 3
         self.usage(err: err)
       end
 
-      options[:current_name] = argv[0]
-      options[:target_name] = argv[1]
+      options[:path] = argv[0]
+      options[:current_name] = argv[1]
+      options[:target_name] = argv[2]
 
       Renamer.new(options).rename!
     end

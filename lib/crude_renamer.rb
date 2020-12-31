@@ -11,6 +11,7 @@ module CrudeRenamer
     Pathname.new(File.absolute_path(File.join(File.dirname(__FILE__), '..')))
   end
 
+  autoload :FileFinder , 'crude_renamer/file_finder'
   autoload :Renamer , 'crude_renamer/renamer'
   autoload :Shell , 'crude_renamer/shell'
 end

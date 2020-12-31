@@ -1,6 +1,7 @@
 module CrudeRenamer
   class Renamer
-    def initialize(current_name:, target_name:, force:, out:, err:)
+    def initialize(path:, current_name:, target_name:, force:, out:, err:)
+      @path = path
       @current_name = current_name
       @target_name = target_name
       @force = force
@@ -9,7 +10,11 @@ module CrudeRenamer
     end
 
     def rename!
-      puts self.inspect
+      files = FileFinder.find(@path) do |p|
+        !p.include?(".git/") &&
+        !FileTest.directory?(p)
+      end
+      puts files
     end
   end
 end
