@@ -1,11 +1,15 @@
 module CrudeRenamer
   class Renamer
-    def initialize(options)
-      @options = options
+    def initialize(current_name:, target_name:, force:, out:, err:)
+      @current_name = current_name
+      @target_name = target_name
+      @force = force
+      @out = out
+      @err = err
     end
 
     def rename!
-      puts @options.inspect
+      puts self.inspect
     end
   end
 end
