@@ -2,7 +2,7 @@ require 'pp'
 
 module CrudeRenamer
   class Renamer
-    def initialize(path:, current_name:, target_name:, force:, out:, err:)
+    def initialize(path:, current_name:, target_name:, force: nil, out: nil, err: nil)
       @path = path
       @current_name = current_name
       @target_name = target_name
@@ -71,19 +71,24 @@ module CrudeRenamer
     def header_file_occurences
       result = ""
       inflections_that_are_present.each_with_index do |inflection, index|
-        result += "   |" * index + ' ' + inflection.to_s + "\n"
+        result += ("   |" * index + ' ' + inflection.to_s + "\n")[1..-1]
       end
-      result += "   |" * inflections_that_are_present.size
+      result += ("   |" * inflections_that_are_present.size + "\n")[1..-1]
       result
+    end
+
+    def report_file_occurences_line(file)
+      result = ""
+      inflections_that_are_present.each_with_index do |inflection, index|
+        result += format_number(file_occurences[file][inflection])
+      end
+      result + ' ' + file + "\n"
     end
 
     def report_file_occurences
       result = ""
       files.select { |f| was_found(file_occurences[f]) }.each do |f|
-        inflections_that_are_present.each_with_index do |inflection, index|
-          result += format_number(file_occurences[f][inflection])
-        end
-        result += ' ' + f + "\n"
+        result += report_file_occurences_line(f)[1..-1]
       end
       result
     end
