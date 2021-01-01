@@ -16,8 +16,13 @@ module CrudeRenamer
     end
 
     def find_occurences(file, mappings)
-      result = {}
-      result[:filename] = count_in_content(mappings[:inflections][:underscore][:current], File.basename(file))
+      occurs_in_filename =
+        File.basename(file).include?(mappings[:inflections][:underscore][:current])
+      occurs_in_filename ||=
+        File.basename(file).include?(mappings[:inflections][:dasherize][:current])
+      result = {
+        filename: occurs_in_filename ? 1 : 0
+      }
       unless FileTest.directory?(file)
         mappings[:inflections].each do |inflection, values|
           result[inflection] = count_in_content(values[:current], File.read(file))
@@ -32,7 +37,7 @@ module CrudeRenamer
     end
 
     def format_number(number)
-      number && number > 0 ? "%3d" % number : '  _'
+      number && number > 0 ? "%4d" % number : '   _'
     end
 
     def rename!
@@ -52,9 +57,9 @@ module CrudeRenamer
 
       header = ""
       inflections_that_are_present.each_with_index do |inflection, index|
-        header += "  |" * index + ' ' + inflection.to_s + "\n"
+        header += "   |" * index + ' ' + inflection.to_s + "\n"
       end
-      header += "  |" * inflections_that_are_present.size
+      header += "   |" * inflections_that_are_present.size
       @out.puts header
 
       files.select { |f| was_found(file_occurences[f]) }.each do |f|
