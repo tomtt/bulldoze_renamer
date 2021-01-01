@@ -3,18 +3,32 @@ require 'filemagic'
 
 module CrudeRenamer
   class FileFinder
+    def self.file_magic
+      @@file_magic ||= FileMagic.new
+    end
+
+    def self.file_excluded?(file)
+      file.include?(".git/") ||
+      File.basename(file) == '.git' ||
+      file == '.'
+    end
+
+    def self.file_considered?(file)
+      return true if FileTest.directory?(file)
+
+      fm = file_magic.file(file)
+      fm.include?('text') ||
+      fm.include?('JSON')
+    end
+
     def self.find(path)
       files = Find.find(path)
       if block_given?
         files.select { |f| yield(f) }
       else
-        fm = FileMagic.new
         files.select do |p|
-          !p.include?(".git/") &&
-          (
-            FileTest.directory?(p) ||
-            fm.file(p).include?('text')
-          )
+          !file_excluded?(p) &&
+          file_considered?(p)
         end
       end
     end
