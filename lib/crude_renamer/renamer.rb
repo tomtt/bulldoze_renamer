@@ -42,36 +42,57 @@ module CrudeRenamer
       number && number > 0 ? "%4d" % number : '   _'
     end
 
-    def rename!
-      files = FileFinder.find(@path)
-      file_occurences = {}
+    def inflections_mapping
+      @inflections_mapping ||= StringInflector.new(@current_name, @target_name).mappings
+    end
 
-      inflections_mapping = StringInflector.new(@current_name, @target_name).mappings
-      PP.pp(inflections_mapping, @out)
+    def files
+      @files ||= FileFinder.find(@path)
+    end
+
+    def file_occurences
+      return @file_occurences if @file_occurences
+
+      result = {}
 
       files.each do |file|
-        file_occurences[file] = find_occurences(file, inflections_mapping)
+        result[file] = find_occurences(file, inflections_mapping)
       end
 
-      inflections = inflections_mapping[:inflections].keys + [:filename]
-      inflections_that_are_present =
+      @file_occurences = result
+    end
+
+    def inflections_that_are_present
+      @inflections_that_are_present ||=
         StringInflector.inflections + [:filename] &
         file_occurences.values.inject({}) { |a,h| h.each { |k,v| v > 0 && (a[k] ||= 0 ; a[k] += v) };a }.keys
+    end
 
-      header = ""
+    def header_file_occurences
+      result = ""
       inflections_that_are_present.each_with_index do |inflection, index|
-        header += "   |" * index + ' ' + inflection.to_s + "\n"
+        result += "   |" * index + ' ' + inflection.to_s + "\n"
       end
-      header += "   |" * inflections_that_are_present.size
-      @out.puts header
+      result += "   |" * inflections_that_are_present.size
+      result
+    end
 
+    def report_file_occurences
+      result = ""
       files.select { |f| was_found(file_occurences[f]) }.each do |f|
-        result = ""
         inflections_that_are_present.each_with_index do |inflection, index|
           result += format_number(file_occurences[f][inflection])
         end
-        @out.puts result + ' ' + f + "\n"
+        result += ' ' + f + "\n"
       end
+      result
+    end
+
+    def rename!
+      PP.pp(inflections_mapping, @out)
+
+      @out.puts header_file_occurences
+      @out.puts report_file_occurences
     end
   end
 end
