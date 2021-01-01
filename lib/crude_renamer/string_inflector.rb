@@ -3,6 +3,8 @@ require "forwardable"
 
 module CrudeRenamer
   class StringInflector
+    class StringDoesNotInflectToItselfError < ArgumentError; end
+
     extend Forwardable
 
     def self.active_support_inflections
@@ -10,10 +12,6 @@ module CrudeRenamer
     end
 
     def_delegators ActiveSupport::Inflector, *StringInflector.active_support_inflections
-
-    def self.camel_to_snake_case(camel_case)
-      ActiveSupport::Inflector.underscore(camel_case)
-    end
 
     def initialize(current, target)
       @current = current
@@ -25,7 +23,9 @@ module CrudeRenamer
     end
 
     def js_camelize(w)
-      w[0].downcase + camelize(w)[1..-1]
+      c = camelize(w).dup
+      c[0] = c[0].downcase
+      c
     end
 
     def self.inflections
@@ -35,12 +35,19 @@ module CrudeRenamer
     def mappings
       result = {
         current_inflection: nil,
+        target_inflection: nil,
         inflections: {}
       }
       StringInflector.inflections.each do |i|
         unless result[:current_inflection]
           if @current == send(i, @current)
             result[:current_inflection] = i
+          end
+        end
+
+        unless result[:target_inflection]
+          if @target == send(i, @target)
+            result[:target_inflection] = i
           end
         end
 
@@ -52,6 +59,14 @@ module CrudeRenamer
         unless result[:inflections].values.include? mapping
           result[:inflections][i] = mapping
         end
+      end
+
+      unless result[:current_inflection]
+        raise StringDoesNotInflectToItselfError.new(@current)
+      end
+
+      unless result[:target_inflection]
+        raise StringDoesNotInflectToItselfError.new(@target)
       end
       result
     end
