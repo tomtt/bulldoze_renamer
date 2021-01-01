@@ -17,8 +17,10 @@ module CrudeRenamer
 
     def find_occurences(file, mappings)
       occurs_in_filename =
+        mappings[:inflections][:underscore] &&
         File.basename(file).include?(mappings[:inflections][:underscore][:current])
       occurs_in_filename ||=
+        mappings[:inflections][:dasherize] &&
         File.basename(file).include?(mappings[:inflections][:dasherize][:current])
       result = {
         filename: occurs_in_filename ? 1 : 0
@@ -53,6 +55,7 @@ module CrudeRenamer
 
       inflections = inflections_mapping[:inflections].keys + [:filename]
       inflections_that_are_present =
+        StringInflector.inflections + [:filename] &
         file_occurences.values.inject({}) { |a,h| h.each { |k,v| v > 0 && (a[k] ||= 0 ; a[k] += v) };a }.keys
 
       header = ""
