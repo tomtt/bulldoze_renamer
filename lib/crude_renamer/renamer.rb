@@ -1,3 +1,4 @@
+require 'pp'
 
 module CrudeRenamer
   class Renamer
@@ -43,6 +44,10 @@ module CrudeRenamer
     def rename!
       files = FileFinder.find(@path)
       file_occurences = {}
+
+      inflections_mapping = StringInflector.new(@current_name, @target_name).mappings
+      PP.pp(inflections_mapping, @out)
+
       files.each do |file|
         file_occurences[file] = find_occurences(file)
       end
