@@ -15,30 +15,24 @@ module CrudeRenamer
       ('~' + content + '~').split(target).size - 1
     end
 
-    def find_occurences(file)
-      snake_case = StringInflector.camel_to_snake_case(@current_name)
-      if FileTest.directory?(file)
-        {
-          camel_case: 0,
-          snake_case: 0,
-          filename: File.basename(file).include?(snake_case)
-        }
-      else
-        content = File.read(file)
-        {
-          camel_case: count_in_content(@current_name, content),
-          snake_case: count_in_content(snake_case, content),
-          filename: File.basename(file).include?(snake_case)
-        }
+    def find_occurences(file, mappings)
+      result = {}
+      result[:filename] = count_in_content(mappings[:inflections][:underscore][:current], File.basename(file))
+      unless FileTest.directory?(file)
+        mappings[:inflections].each do |inflection, values|
+          result[inflection] = count_in_content(values[:current], File.read(file))
+        end
       end
+
+      result
     end
 
     def was_found(occ)
-      occ[:camel_case] > 0 || occ[:snake_case] > 0 || occ[:filename]
+      occ.values.sum > 0
     end
 
     def format_number(number)
-      number > 0 ? "%2d" % number : ' _'
+      number && number > 0 ? "%3d" % number : '  _'
     end
 
     def rename!
@@ -49,16 +43,26 @@ module CrudeRenamer
       PP.pp(inflections_mapping, @out)
 
       files.each do |file|
-        file_occurences[file] = find_occurences(file)
+        file_occurences[file] = find_occurences(file, inflections_mapping)
       end
 
+      inflections = inflections_mapping[:inflections].keys + [:filename]
+      inflections_that_are_present =
+        file_occurences.values.inject({}) { |a,h| h.each { |k,v| v > 0 && (a[k] ||= 0 ; a[k] += v) };a }.keys
+
+      header = ""
+      inflections_that_are_present.each_with_index do |inflection, index|
+        header += "  |" * index + ' ' + inflection.to_s + "\n"
+      end
+      header += "  |" * inflections_that_are_present.size
+      @out.puts header
+
       files.select { |f| was_found(file_occurences[f]) }.each do |f|
-        puts "%s %s %s %-40s" % [
-          format_number(file_occurences[f][:camel_case]),
-          format_number(file_occurences[f][:snake_case]),
-          file_occurences[f][:filename] ? ' 1' : ' _',
-          f
-        ]
+        result = ""
+        inflections_that_are_present.each_with_index do |inflection, index|
+          result += format_number(file_occurences[f][inflection])
+        end
+        @out.puts result + ' ' + f + "\n"
       end
     end
   end
