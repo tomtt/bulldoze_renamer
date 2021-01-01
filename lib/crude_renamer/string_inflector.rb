@@ -8,7 +8,11 @@ module CrudeRenamer
     extend Forwardable
 
     def self.active_support_inflections
-      [:underscore, :camelize, :dasherize]
+      [:underscore, :camelize]
+    end
+
+    def self.inflections
+      active_support_inflections + [:dasherize, :upcase, :js_camelize]
     end
 
     def_delegators ActiveSupport::Inflector, *StringInflector.active_support_inflections
@@ -22,14 +26,14 @@ module CrudeRenamer
       underscore(w).upcase
     end
 
+    def dasherize(w)
+      ActiveSupport::Inflector.dasherize(underscore(w))
+    end
+
     def js_camelize(w)
       c = camelize(w).dup
       c[0] = c[0].downcase
       c
-    end
-
-    def self.inflections
-      active_support_inflections + [:upcase, :js_camelize]
     end
 
     def mappings

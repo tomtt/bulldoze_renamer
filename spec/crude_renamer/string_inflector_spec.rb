@@ -77,5 +77,20 @@ RSpec.describe CrudeRenamer::StringInflector do
       expect(-> { CrudeRenamer::StringInflector.new('whatevs', 'target does-Not_Reflect').mappings }).
       to raise_error(CrudeRenamer::StringInflector::StringDoesNotInflectToItselfError, "target does-Not_Reflect")
     end
+
+    it "dasherizes camelcased current" do
+      expected_mappings = {
+        current_inflection: :camelize,
+        target_inflection: :camelize,
+        inflections: {
+          underscore: { current: "dr_who", target: "roger_rabbit" },
+          camelize: { current: "DrWho", target: "RogerRabbit" },
+          dasherize: { current: "dr-who", target: "roger-rabbit" },
+          upcase: { current: "DR_WHO", target: "ROGER_RABBIT" },
+          js_camelize: {current: "drWho", target: "rogerRabbit"}
+        }
+      }
+      expect(CrudeRenamer::StringInflector.new('DrWho', 'RogerRabbit').mappings).to eq(expected_mappings)
+    end
   end
 end
