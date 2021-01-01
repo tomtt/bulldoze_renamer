@@ -14,4 +14,5 @@ module CrudeRenamer
   autoload :FileFinder , 'crude_renamer/file_finder'
   autoload :Renamer , 'crude_renamer/renamer'
   autoload :Shell , 'crude_renamer/shell'
+  autoload :StringInflector , 'crude_renamer/string_inflector'
 end
