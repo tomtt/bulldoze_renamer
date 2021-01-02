@@ -23,13 +23,17 @@ module CrudeRenamer
     end
 
     def self.find(path)
-      files = `git ls-files #{path}`.split
-      if block_given?
-        files.select { |f| yield(f) }
-      else
-        files.select do |p|
-          !file_excluded?(p) &&
-          file_considered?(p)
+      files = []
+      Dir.chdir(path) do
+        files = `git ls-files`.split
+
+        if block_given?
+          files.select { |f| yield(f) }
+        else
+          files.select do |p|
+            !file_excluded?(p) &&
+            file_considered?(p)
+          end
         end
       end
     end

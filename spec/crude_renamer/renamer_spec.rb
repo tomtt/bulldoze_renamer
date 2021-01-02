@@ -1,39 +1,49 @@
 require 'tmpdir'
+require 'fileutils'
 
 RSpec.describe CrudeRenamer::Renamer do
-  def within_dummy_directory
+  def within_tmpdir
     Dir.mktmpdir do |dir|
-      Dir.chdir dir do
-        File.open('cupboard_items.js', 'w') do |f|
-          f.puts <<-EOT
-            [
-              "can-of-worms",
-              "pecan-icecream"
-            ]
-          EOT
-        end
+      yield(dir)
+    end
+  end
 
-        File.open('can_of_worms.rb', 'w') do |f|
-          f.puts <<-EOT
-            class CanOfWorms
-              WORMS_IN_CAN_OF_WORMS = 3
-            end
-          EOT
-        end
-
-        `git init`
-        `git add .`
-        `git commit -m 'commit tempory directory'`
-
-        yield(dir)
+  def add_file_to_dir(dir, path, content)
+    Dir.chdir dir do
+      FileUtils.mkdir_p File.dirname(path)
+      File.open(path, 'w') do |f|
+        f.puts content
       end
+      `git init`
+      `git add .`
+      `git commit -m 'Added #{File.basename(path)} file'`
+    end
+  end
+
+  def within_dummy_directory
+    within_tmpdir do |dir|
+      add_file_to_dir(dir, 'json-lists/cupboard_items.js', <<~EOT
+          [
+            "can-of-worms",
+            "pecan-icecream"
+          ]
+        EOT
+      )
+
+      add_file_to_dir(dir, 'ruby-items/can_of_worms.rb', <<~EOT
+          class CanOfWorms
+            WORMS_IN_CAN_OF_WORMS = 3
+          end
+        EOT
+      )
+      yield(dir)
     end
   end
 
   it "shows occurences in a file system" do
     within_dummy_directory do |dir|
       renamer = CrudeRenamer::Renamer.new(
-        path: '.',
+        path: dir,
         current_name: 'can_of_worms',
         target_name: 'piece_of_cake'
       )
@@ -45,8 +55,8 @@ RSpec.describe CrudeRenamer::Renamer do
         |   | upcase
         |   |   | filename
         |   |   |   |
-        1   _   1   1 can_of_worms.rb
-        _   1   _   _ cupboard_items.js
+        _   1   _   _ json-lists/cupboard_items.js
+        1   _   1   1 ruby-items/can_of_worms.rb
       EOT
 
       expect(report).to eq(expected_report)
@@ -56,7 +66,7 @@ RSpec.describe CrudeRenamer::Renamer do
   it "shows only inflections that occur in a file system" do
     within_dummy_directory do |dir|
       renamer = CrudeRenamer::Renamer.new(
-        path: '.',
+        path: dir,
         current_name: 'PecanIcecream',
         target_name: 'CaramelIcecream'
       )
@@ -66,7 +76,7 @@ RSpec.describe CrudeRenamer::Renamer do
       expected_report = <<~EOT
       dasherize
         |
-        1 cupboard_items.js
+        1 json-lists/cupboard_items.js
       EOT
 
       expect(report).to eq(expected_report)

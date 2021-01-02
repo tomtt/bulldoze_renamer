@@ -14,18 +14,20 @@ module CrudeRenamer
     end
 
     def find_occurences(file, mappings)
-      occurs_in_filename =
+      result = {}
+      Dir.chdir @path do
+        occurs_in_filename =
         mappings[:inflections][:underscore] &&
         File.basename(file).include?(mappings[:inflections][:underscore][:current])
-      occurs_in_filename ||=
+        occurs_in_filename ||=
         mappings[:inflections][:dasherize] &&
         File.basename(file).include?(mappings[:inflections][:dasherize][:current])
-      result = {
-        filename: occurs_in_filename ? 1 : 0
-      }
-      unless FileTest.directory?(file)
-        mappings[:inflections].each do |inflection, values|
-          result[inflection] = count_in_content(values[:current], File.read(file))
+        result[:filename] = occurs_in_filename ? 1 : 0
+        
+        unless FileTest.directory?(file)
+          mappings[:inflections].each do |inflection, values|
+            result[inflection] = count_in_content(values[:current], File.read(file))
+          end
         end
       end
 
