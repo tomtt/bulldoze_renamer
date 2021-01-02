@@ -23,14 +23,13 @@ module CrudeRenamer
         mappings[:inflections][:dasherize] &&
         File.basename(file).include?(mappings[:inflections][:dasherize][:current])
         result[:filename] = occurs_in_filename ? 1 : 0
-        
+
         unless FileTest.directory?(file)
           mappings[:inflections].each do |inflection, values|
             result[inflection] = count_in_content(values[:current], File.read(file))
           end
         end
       end
-
       result
     end
 

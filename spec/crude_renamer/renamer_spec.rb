@@ -82,4 +82,24 @@ RSpec.describe CrudeRenamer::Renamer do
       expect(report).to eq(expected_report)
     end
   end
+
+  it "shows inflection for name of directory" do
+    within_dummy_directory do |dir|
+      renamer = CrudeRenamer::Renamer.new(
+        path: dir,
+        current_name: 'json-lists',
+        target_name: 'js-content'
+      )
+
+      report = renamer.report_header_file_occurences + renamer.report_file_occurences
+
+      expected_report = <<~EOT
+      filename
+        |
+        1 json-lists
+      EOT
+
+      expect(report).to eq(expected_report)
+    end
+  end
 end

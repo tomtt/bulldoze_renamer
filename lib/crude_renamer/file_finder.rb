@@ -22,10 +22,29 @@ module CrudeRenamer
       fm.include?('JSON')
     end
 
+    # Using git ls-files has many advantages but it does not
+    # return directories. This method extracts all directories
+    # as present for the files found.
+    def self.extract_directories(files)
+      result = Set.new
+      files.each do |f|
+        dir = File.dirname(f)
+
+        # File.dirname('foo') => "."
+        # File.dirname('/foo') => "/"
+        while(dir != '.' && dir != '/' && !result.include?(dir))
+          result << dir
+          dir = File.dirname(dir)
+        end
+      end
+      result.to_a.sort
+    end
+
     def self.find(path)
       files = []
       Dir.chdir(path) do
         files = `git ls-files`.split
+        files = (files + extract_directories(files)).sort
 
         if block_given?
           files.select { |f| yield(f) }
