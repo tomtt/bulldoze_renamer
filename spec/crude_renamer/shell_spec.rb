@@ -11,7 +11,7 @@ RSpec.describe CrudeRenamer::Shell do
 
   it "performs a replace if there are exactly two arguments" do
     argv = ['.', 'foo', 'bar']
-    expect(::CrudeRenamer::Renamer).
+    expect(::CrudeRenamer::RenamingOrchestrator).
       to receive(:new).
       with(hash_including(path: '.', current_name: 'foo', target_name: 'bar', force: false)).
       and_return(renamer_double)
@@ -26,7 +26,7 @@ RSpec.describe CrudeRenamer::Shell do
 
   it "sets force to true if -f option is passed" do
     argv = ['some/path', '-f', 'foo', 'bar']
-    expect(::CrudeRenamer::Renamer).
+    expect(::CrudeRenamer::RenamingOrchestrator).
       to receive(:new).
       with(hash_including(path: 'some/path', current_name: 'foo', target_name: 'bar', force: true)).
       and_return(renamer_double)

@@ -1,7 +1,7 @@
 require 'pp'
 
 module CrudeRenamer
-  class Renamer
+  class RenamingOrchestrator
     def initialize(path:, current_name:, target_name:, force: nil)
       @path = path
       @current_name = current_name

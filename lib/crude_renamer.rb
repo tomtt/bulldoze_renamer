@@ -12,7 +12,7 @@ module CrudeRenamer
   end
 
   autoload :FileFinder , 'crude_renamer/file_finder'
-  autoload :Renamer , 'crude_renamer/renamer'
+  autoload :RenamingOrchestrator , 'crude_renamer/renaming_orchestrator'
   autoload :Shell , 'crude_renamer/shell'
   autoload :StringInflector , 'crude_renamer/string_inflector'
 end

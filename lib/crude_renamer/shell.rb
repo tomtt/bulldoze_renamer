@@ -16,7 +16,7 @@ EOT
     end
 
     def self.rename_with_options(options, out, err)
-      renamer = Renamer.new(options)
+      renamer = RenamingOrchestrator.new(options)
       out.puts renamer.reports
       renamer.rename! if options[:force]
     end

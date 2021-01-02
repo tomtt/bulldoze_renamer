@@ -1,7 +1,7 @@
 require 'tmpdir'
 require 'fileutils'
 
-RSpec.describe CrudeRenamer::Renamer do
+RSpec.describe CrudeRenamer::RenamingOrchestrator do
   def within_tmpdir
     Dir.mktmpdir do |dir|
       yield(dir)
@@ -42,7 +42,7 @@ RSpec.describe CrudeRenamer::Renamer do
 
   it "shows occurences in a file system" do
     within_dummy_directory do |dir|
-      renamer = CrudeRenamer::Renamer.new(
+      renamer = CrudeRenamer::RenamingOrchestrator.new(
         path: dir,
         current_name: 'can_of_worms',
         target_name: 'piece_of_cake'
@@ -65,7 +65,7 @@ RSpec.describe CrudeRenamer::Renamer do
 
   it "shows only inflections that occur in a file system" do
     within_dummy_directory do |dir|
-      renamer = CrudeRenamer::Renamer.new(
+      renamer = CrudeRenamer::RenamingOrchestrator.new(
         path: dir,
         current_name: 'PecanIcecream',
         target_name: 'CaramelIcecream'
@@ -85,7 +85,7 @@ RSpec.describe CrudeRenamer::Renamer do
 
   it "shows inflection for name of directory" do
     within_dummy_directory do |dir|
-      renamer = CrudeRenamer::Renamer.new(
+      renamer = CrudeRenamer::RenamingOrchestrator.new(
         path: dir,
         current_name: 'json-lists',
         target_name: 'js-content'
