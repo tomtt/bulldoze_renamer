@@ -23,7 +23,7 @@ module CrudeRenamer
     end
 
     def self.find(path)
-      files = Find.find(path)
+      files = `git ls-files #{path}`.split
       if block_given?
         files.select { |f| yield(f) }
       else

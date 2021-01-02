@@ -21,6 +21,10 @@ RSpec.describe CrudeRenamer::Renamer do
           EOT
         end
 
+        `git init`
+        `git add .`
+        `git commit -m 'commit tempory directory'`
+
         yield(dir)
       end
     end
@@ -41,8 +45,8 @@ RSpec.describe CrudeRenamer::Renamer do
         |   | upcase
         |   |   | filename
         |   |   |   |
-        1   _   1   1 ./can_of_worms.rb
-        _   1   _   _ ./cupboard_items.js
+        1   _   1   1 can_of_worms.rb
+        _   1   _   _ cupboard_items.js
       EOT
 
       expect(report).to eq(expected_report)
@@ -62,7 +66,7 @@ RSpec.describe CrudeRenamer::Renamer do
       expected_report = <<~EOT
       dasherize
         |
-        1 ./cupboard_items.js
+        1 cupboard_items.js
       EOT
 
       expect(report).to eq(expected_report)

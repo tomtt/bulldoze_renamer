@@ -9,23 +9,32 @@ RSpec.describe CrudeRenamer::FileFinder do
         File.open(path, 'w') do |f|
           f.puts content
         end
-
+        `git init`
+        `git add .`
+        `git commit -m 'commit tempory directory'`
         yield(dir)
       end
     end
   end
 
-  it "includes ruby file in a file system" do
+  it "includes ruby file in root of directory" do
     with_file_in_tmpdir 'can_of_worms.rb', 'c=1' do |dir|
       expect(CrudeRenamer::FileFinder.find('.')).
-      to eq(["./can_of_worms.rb"])
+      to eq(["can_of_worms.rb"])
+    end
+  end
+
+  it "includes ruby file in a directory a few levels deep" do
+    with_file_in_tmpdir 'some/where/deep/can_of_worms.rb', 'c=1' do |dir|
+      expect(CrudeRenamer::FileFinder.find('.')).
+      to eq(["some/where/deep/can_of_worms.rb"])
     end
   end
 
   it "includes json js file in a file system" do
-    with_file_in_tmpdir 'cupboard_items.js', '[]' do |dir|
+    with_file_in_tmpdir 'items/cupboard_items.js', '[]' do |dir|
       expect(CrudeRenamer::FileFinder.find('.')).
-      to eq(['./cupboard_items.js'])
+      to eq(['items/cupboard_items.js'])
     end
   end
 
@@ -46,7 +55,7 @@ RSpec.describe CrudeRenamer::FileFinder do
   it "includes text file with UTF-8" do
     with_file_in_tmpdir 'utf8.rb', '🥳' do |dir|
       expect(CrudeRenamer::FileFinder.find('.')).
-      to eq(['./utf8.rb'])
+      to eq(['utf8.rb'])
     end
   end
 
