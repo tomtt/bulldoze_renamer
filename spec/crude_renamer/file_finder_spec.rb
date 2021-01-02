@@ -1,22 +1,6 @@
-require 'tmpdir'
-require 'fileutils'
+require 'support/temporary_file_tools'
 
 RSpec.describe CrudeRenamer::FileFinder do
-  def with_file_in_tmpdir(path, content)
-    Dir.mktmpdir do |dir|
-      Dir.chdir dir do
-        FileUtils.mkdir_p File.dirname(path)
-        File.open(path, 'w') do |f|
-          f.puts content
-        end
-        `git init`
-        `git add .`
-        `git commit -m 'commit tempory directory'`
-      end
-      yield(dir)
-    end
-  end
-
   describe "find" do
     it "includes ruby file in root of directory" do
       with_file_in_tmpdir 'can_of_worms.rb', 'c=1' do |dir|
