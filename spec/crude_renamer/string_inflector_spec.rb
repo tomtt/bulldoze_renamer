@@ -92,5 +92,18 @@ RSpec.describe CrudeRenamer::StringInflector do
       }
       expect(CrudeRenamer::StringInflector.new('DrWho', 'RogerRabbit').mappings).to eq(expected_mappings)
     end
+
+    it "excludes mappings that are identical for current but different for target" do
+      expected_mappings = {
+        current_inflection: :camelize,
+        target_inflection: :camelize,
+        inflections: {
+          underscore: { current: "jerry", target: "roger_rabbit" },
+          camelize: { current: "Jerry", target: "RogerRabbit" },
+          upcase: { current: "JERRY", target: "ROGER_RABBIT" }
+        }
+      }
+      expect(CrudeRenamer::StringInflector.new('Jerry', 'RogerRabbit').mappings).to eq(expected_mappings)
+    end
   end
 end

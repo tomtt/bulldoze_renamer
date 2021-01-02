@@ -60,7 +60,10 @@ module CrudeRenamer
           target: send(i, @target)
         }
 
-        unless result[:inflections].values.include? mapping
+        unless result[:inflections].
+          values.
+          map { |i| i[:current] }.
+          include?(mapping[:current])
           result[:inflections][i] = mapping
         end
       end
