@@ -2,11 +2,11 @@ require 'pp'
 
 module CrudeRenamer
   class RenamingOrchestrator
-    def initialize(path:, current_name:, target_name:, force: nil)
+    def initialize(path:, current_name:, target_name:, perform: nil)
       @path = path
       @current_name = current_name
       @target_name = target_name
-      @force = force
+      @perform = perform
     end
 
     def count_in_content(target, content)
@@ -84,9 +84,13 @@ module CrudeRenamer
       result + ' ' + file + "\n"
     end
 
+    def files_that_have_occurences
+      files.select { |f| was_found(file_occurences[f]) }
+    end
+
     def report_file_occurences
       result = ""
-      files.select { |f| was_found(file_occurences[f]) }.each do |f|
+      files_that_have_occurences.each do |f|
         result += report_file_occurences_line(f)[1..-1]
       end
       result
@@ -102,8 +106,7 @@ module CrudeRenamer
       result + "\n"
     end
 
-    def reports
-      report_inflections_mapping +
+    def reports_for_files
       report_header_file_occurences +
       report_file_occurences
     end

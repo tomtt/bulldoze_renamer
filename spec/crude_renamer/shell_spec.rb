@@ -1,7 +1,7 @@
 RSpec.describe CrudeRenamer::Shell do
   let(:err_double) { double('err') }
   let(:out_double) { double('out', puts: nil) }
-  let(:renamer_double) { double('renamer', reports: '') }
+  let(:renamer_double) { double('renamer', reports_for_files: '', report_inflections_mapping: '') }
 
   it "exits without replacing if no argument is passed" do
     argv = []
@@ -13,7 +13,7 @@ RSpec.describe CrudeRenamer::Shell do
     argv = ['.', 'foo', 'bar']
     expect(::CrudeRenamer::RenamingOrchestrator).
       to receive(:new).
-      with(hash_including(path: '.', current_name: 'foo', target_name: 'bar', force: false)).
+      with(hash_including(path: '.', current_name: 'foo', target_name: 'bar', perform: false)).
       and_return(renamer_double)
     ::CrudeRenamer::Shell.start( argv, out: out_double, err: err_double)
   end
@@ -24,11 +24,11 @@ RSpec.describe CrudeRenamer::Shell do
     expect(lambda { ::CrudeRenamer::Shell.start( argv, out: out_double, err: err_double) }).to raise_error SystemExit
   end
 
-  it "sets force to true if -f option is passed" do
-    argv = ['some/path', '-f', 'foo', 'bar']
+  it "sets perform to true if -p option is passed" do
+    argv = ['some/path', '-p', 'foo', 'bar']
     expect(::CrudeRenamer::RenamingOrchestrator).
       to receive(:new).
-      with(hash_including(path: 'some/path', current_name: 'foo', target_name: 'bar', force: true)).
+      with(hash_including(path: 'some/path', current_name: 'foo', target_name: 'bar', perform: true)).
       and_return(renamer_double)
     expect(renamer_double).to receive(:rename!)
     ::CrudeRenamer::Shell.start( argv, out: out_double, err: err_double)

@@ -5,9 +5,15 @@ module CrudeRenamer
     BANNER = <<"EOT"
 usage: #{$0} path CurrentNameInCamelCase TargetName
 
-Will do a crude renaming of everything in the current directory
-you better be sure everything you run it on is checked into source
-control since this script is potentially destructive.
+Will do a crude renaming of everything in the current directory. It
+uses `git ls-files` to find the files so only things checked into
+git are subject to change.
+
+This script is still potentially dangerous, use with caution.
+
+By default only an overview is shown of what changes will be made
+in what files. To actually perform those changes, pass the '-p'
+option.
 EOT
 
     def self.usage(err: STDERR)
@@ -16,23 +22,33 @@ EOT
     end
 
     def self.rename_with_options(options, out, err)
-      renamer = RenamingOrchestrator.new(options)
-      out.puts renamer.reports
-      renamer.rename! if options[:force]
+      orch = RenamingOrchestrator.new(options)
+      out.puts orch.report_inflections_mapping
+
+      if orch.files_that_have_occurences.empty?
+        out.puts "'#{options[:current_name]}' can not be found in any of the files in '#{options[:path]}'"
+      else
+        out.puts orch.reports_for_files
+        if options[:perform]
+          orch.rename!
+        else
+          out.puts "\nThis is an overview of changes that would be made\nRun same command with -p option to perform"
+        end
+      end
     end
 
     def self.start(argv, out: STDOUT, err: STDERR)
       options = {
         current_name: nil,
         target_name: nil,
-        force: false
+        perform: false
       }
 
       OptionParser.new do |parser|
         parser.banner = BANNER
 
-        parser.on("-f", "--force", "Ignore any warnings and perform crude rename regardless") do |force|
-          options[:force] = force
+        parser.on("-p", "--perform", "Perform the substitutions on the files") do |perform|
+          options[:perform] = perform
         end
       end.parse! argv
 
