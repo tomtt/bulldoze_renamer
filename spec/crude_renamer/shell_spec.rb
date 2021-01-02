@@ -1,7 +1,7 @@
 RSpec.describe CrudeRenamer::Shell do
   let(:err_double) { double('err') }
-  let(:out_double) { double('out') }
-  let(:renamer_double) { double('renamer') }
+  let(:out_double) { double('out', puts: nil) }
+  let(:renamer_double) { double('renamer', reports: '') }
 
   it "exits without replacing if no argument is passed" do
     argv = []
@@ -13,9 +13,8 @@ RSpec.describe CrudeRenamer::Shell do
     argv = ['.', 'foo', 'bar']
     expect(::CrudeRenamer::Renamer).
       to receive(:new).
-      with(hash_including(path: '.', current_name: 'foo', target_name: 'bar', force: false, out: out_double, err: err_double)).
+      with(hash_including(path: '.', current_name: 'foo', target_name: 'bar', force: false)).
       and_return(renamer_double)
-    expect(renamer_double).to receive(:rename!)
     ::CrudeRenamer::Shell.start( argv, out: out_double, err: err_double)
   end
 
@@ -29,7 +28,7 @@ RSpec.describe CrudeRenamer::Shell do
     argv = ['some/path', '-f', 'foo', 'bar']
     expect(::CrudeRenamer::Renamer).
       to receive(:new).
-      with(hash_including(path: 'some/path', current_name: 'foo', target_name: 'bar', force: true, out: out_double, err: err_double)).
+      with(hash_including(path: 'some/path', current_name: 'foo', target_name: 'bar', force: true)).
       and_return(renamer_double)
     expect(renamer_double).to receive(:rename!)
     ::CrudeRenamer::Shell.start( argv, out: out_double, err: err_double)

@@ -15,13 +15,17 @@ EOT
       exit 1
     end
 
+    def self.rename_with_options(options, out, err)
+      renamer = Renamer.new(options)
+      out.puts renamer.reports
+      renamer.rename! if options[:force]
+    end
+
     def self.start(argv, out: STDOUT, err: STDERR)
       options = {
         current_name: nil,
         target_name: nil,
-        force: false,
-        out: out,
-        err: err
+        force: false
       }
 
       OptionParser.new do |parser|
@@ -40,7 +44,7 @@ EOT
       options[:current_name] = argv[1]
       options[:target_name] = argv[2]
 
-      Renamer.new(options).rename!
+      rename_with_options(options, out, err)
     end
   end
 end
