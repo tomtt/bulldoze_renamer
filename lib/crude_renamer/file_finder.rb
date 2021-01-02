@@ -9,6 +9,7 @@ module CrudeRenamer
 
     def self.file_excluded?(file)
       file.include?(".git/") ||
+      file.include?("node_modules") ||
       File.basename(file) == '.git' ||
       file == '.'
     end

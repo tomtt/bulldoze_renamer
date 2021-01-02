@@ -56,4 +56,11 @@ RSpec.describe CrudeRenamer::FileFinder do
       to eq([])
     end
   end
+
+  it "does not include files in node_modules" do
+    with_file_in_tmpdir 'node_modules/foo/bar.js', "a = 1;" do |dir|
+      expect(CrudeRenamer::FileFinder.find('.')).
+      to eq([])
+    end
+  end
 end
