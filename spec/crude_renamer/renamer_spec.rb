@@ -34,7 +34,7 @@ RSpec.describe CrudeRenamer::Renamer do
         target_name: 'piece_of_cake'
       )
 
-      report = renamer.header_file_occurences + renamer.report_file_occurences
+      report = renamer.report_header_file_occurences + renamer.report_file_occurences
       expected_report = <<~EOT
       camelize
         | dasherize
@@ -57,7 +57,7 @@ RSpec.describe CrudeRenamer::Renamer do
         target_name: 'CaramelIcecream'
       )
 
-      report = renamer.header_file_occurences + renamer.report_file_occurences
+      report = renamer.report_header_file_occurences + renamer.report_file_occurences
 
       expected_report = <<~EOT
       dasherize

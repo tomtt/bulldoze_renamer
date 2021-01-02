@@ -2,13 +2,11 @@ require 'pp'
 
 module CrudeRenamer
   class Renamer
-    def initialize(path:, current_name:, target_name:, force: nil, out: nil, err: nil)
+    def initialize(path:, current_name:, target_name:, force: nil)
       @path = path
       @current_name = current_name
       @target_name = target_name
       @force = force
-      @out = out
-      @err = err
     end
 
     def count_in_content(target, content)
@@ -68,7 +66,7 @@ module CrudeRenamer
         file_occurences.values.inject({}) { |a,h| h.each { |k,v| v > 0 && (a[k] ||= 0 ; a[k] += v) };a }.keys
     end
 
-    def header_file_occurences
+    def report_header_file_occurences
       result = ""
       inflections_that_are_present.each_with_index do |inflection, index|
         result += ("   |" * index + ' ' + inflection.to_s + "\n")[1..-1]
@@ -93,11 +91,24 @@ module CrudeRenamer
       result
     end
 
-    def rename!
-      PP.pp(inflections_mapping, @out)
+    def report_inflections_mapping
+      longest_current = inflections_mapping[:inflections].values.map { |v| v[:current].size }.max
 
-      @out.puts header_file_occurences
-      @out.puts report_file_occurences
+      result = ""
+      inflections_mapping[:inflections].each do |i, v|
+        result += "%-11s: %-#{longest_current}s -> %s\n" % [i, v[:current], v[:target]]
+      end
+      result + "\n"
+    end
+
+    def reports
+      report_inflections_mapping +
+      report_header_file_occurences +
+      report_file_occurences
+    end
+
+    def rename!
+      raise "TODO"
     end
   end
 end
