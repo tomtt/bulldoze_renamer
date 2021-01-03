@@ -112,9 +112,11 @@ module BulldozeRenamer
     end
 
     def new_filename_for(filename)
+      dirname = File.dirname(filename)
+      basename = File.basename(filename)
       inflections_mapping[:inflections].each do |m, v|
-        if filename.include?(v[:current])
-          return filename.gsub(v[:current], v[:target])
+        if basename.include?(v[:current])
+          return File.join(dirname, basename.gsub(v[:current], v[:target]))
         end
       end
       filename

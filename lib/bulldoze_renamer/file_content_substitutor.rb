@@ -36,7 +36,7 @@ module BulldozeRenamer
       end
 
       with_content_written_to_temporary_file(original_path, content) do |f|
-        FileUtils.mv(f, full_path(new_path))
+        FileUtils.cp_r(f, full_path(new_path), preserve: true)
         if new_path != original_path
           FileUtils.rm(full_path(original_path))
         end
