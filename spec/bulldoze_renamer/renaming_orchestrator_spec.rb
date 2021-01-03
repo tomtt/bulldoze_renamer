@@ -113,6 +113,14 @@ RSpec.describe BulldozeRenamer::RenamingOrchestrator do
         perform_report = StringIO.new
         orchestrator.perform!(out: perform_report)
 
+        expected_perform_report = <<~EOT
+          Performing:
+          R lib/bears/pooh_bear/pooh_bear.rb -> lib/bears/pooh_bear/honey_bear.rb
+          d lib/bears/pooh_bear -> lib/bears/honey_bear
+        EOT
+
+        perform_report.rewind
+        expect(perform_report.read).to eq expected_perform_report
         expect(File.read(File.join(dir, path_after))).to eq(content_after)
       end
     end

@@ -124,7 +124,7 @@ module BulldozeRenamer
 
     def perform_directory!(dirname, out)
       new_dirname = new_filename_for(dirname)
-      out.puts "d #{dirname}->#{new_dirname}"
+      out.puts "d #{dirname} -> #{new_dirname}"
       FileContentSubstitutor.new(@path).move_directory(dirname, new_dirname)
     end
 
@@ -153,7 +153,7 @@ module BulldozeRenamer
     end
 
     def perform!(out:)
-      out.puts "\nPerforming:"
+      out.puts "Performing:"
       directories = []
       files_that_have_occurences.each do |filename|
         occurences = file_occurences[filename]
@@ -179,6 +179,7 @@ module BulldozeRenamer
       else
         out.puts orch.reports_for_files
         if options[:perform]
+          puts
           orch.perform!(out: out)
         else
           out.puts "\nThis is an overview of changes that would be made\nRun same command with -p option to perform"
