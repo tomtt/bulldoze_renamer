@@ -8,6 +8,12 @@ RSpec.describe BulldozeRenamer::Shell do
     expect(lambda { ::BulldozeRenamer::Shell.start( argv, out: out_double, err: err_double) }).to raise_error SystemExit
   end
 
+  it "exits without replacing if one argument is passed" do
+    argv = ['one']
+    expect(err_double).to receive(:puts).with ::BulldozeRenamer::Shell::BANNER
+    expect(lambda { ::BulldozeRenamer::Shell.start( argv, out: out_double, err: err_double) }).to raise_error SystemExit
+  end
+
   it "performs a replace if there are exactly two arguments" do
     argv = ['.', 'foo', 'bar']
     expect(::BulldozeRenamer::RenamingOrchestrator).
