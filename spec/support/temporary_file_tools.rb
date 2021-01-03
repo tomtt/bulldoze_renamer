@@ -25,3 +25,10 @@ def with_file_in_tmpdir(path, content)
     yield(dir)
   end
 end
+
+def with_directory_in_tmpdir(path)
+  within_tmpdir do |dir|
+    FileUtils.mkdir_p File.join(dir, path)
+    yield(dir)
+  end
+end
