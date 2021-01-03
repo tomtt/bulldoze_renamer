@@ -111,8 +111,77 @@ module CrudeRenamer
       report_file_occurences
     end
 
-    def rename!
-      raise "TODO"
+    def new_filename_for(filename)
+      inflections_mapping[:inflections].each do |m, v|
+        if filename.include?(v[:current])
+          return filename.gsub(v[:current], v[:target])
+        end
+      end
+      filename
+    end
+
+    def perform_directory!(dirname, out)
+      new_dirname = new_filename_for(dirname)
+      out.puts "d #{dirname}->#{new_dirname}"
+      FileContentSubstitutor.new(@path).move_directory(dirname, new_dirname)
+    end
+
+    def perform_file!(filename, occurences, out)
+       new_filename = if occurences[:filename] > 0
+         x = new_filename_for(filename)
+         mode = 'r'
+         unless occurences.select { |k,v| k != :filename && v > 0 }.empty?
+           mode = 'R'
+         end
+
+         out.puts "#{mode} #{filename} -> #{x}"
+         x
+       else
+         out.puts "f #{filename}"
+         filename
+       end
+
+       present_mappings = occurences.select { |k,v| k != :filename && v > 0 }
+       mappings = present_mappings.map do |m,c|
+         inflections_mapping[:inflections][m].values
+       end
+
+       FileContentSubstitutor.new(@path).
+       substitute_in(filename, new_filename, mappings)
+    end
+
+    def perform!(out:)
+      out.puts "\nPerforming:"
+      directories = []
+      files_that_have_occurences.each do |filename|
+        occurences = file_occurences[filename]
+        if FileTest.directory?(File.join(@path, filename))
+          directories << filename
+        else
+          perform_file!(filename, occurences, out)
+        end
+      end
+
+      directories.reverse.each do |dir|
+        perform_directory!(dir, out)
+      end
+
+    end
+
+    def self.rename_with_options(options, out:, err:)
+      orch = RenamingOrchestrator.new(options)
+      out.puts orch.report_inflections_mapping
+
+      if orch.files_that_have_occurences.empty?
+        out.puts "'#{options[:current_name]}' can not be found in any of the files in '#{options[:path]}'"
+      else
+        out.puts orch.reports_for_files
+        if options[:perform]
+          orch.perform!(out: out)
+        else
+          out.puts "\nThis is an overview of changes that would be made\nRun same command with -p option to perform"
+        end
+      end
     end
   end
 end
