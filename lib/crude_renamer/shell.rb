@@ -21,22 +21,6 @@ EOT
       exit 1
     end
 
-    def self.rename_with_options(options, out, err)
-      orch = RenamingOrchestrator.new(options)
-      out.puts orch.report_inflections_mapping
-
-      if orch.files_that_have_occurences.empty?
-        out.puts "'#{options[:current_name]}' can not be found in any of the files in '#{options[:path]}'"
-      else
-        out.puts orch.reports_for_files
-        if options[:perform]
-          orch.rename!
-        else
-          out.puts "\nThis is an overview of changes that would be made\nRun same command with -p option to perform"
-        end
-      end
-    end
-
     def self.start(argv, out: STDOUT, err: STDERR)
       options = {
         current_name: nil,
@@ -60,7 +44,7 @@ EOT
       options[:current_name] = argv[1]
       options[:target_name] = argv[2]
 
-      rename_with_options(options, out, err)
+      RenamingOrchestrator.rename_with_options(options, out: out, err: err)
     end
   end
 end
