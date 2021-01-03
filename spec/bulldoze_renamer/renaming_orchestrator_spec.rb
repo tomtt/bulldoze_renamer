@@ -23,13 +23,13 @@ RSpec.describe BulldozeRenamer::RenamingOrchestrator do
 
   it "shows occurences in a file system" do
     within_dummy_directory do |dir|
-      renamer = BulldozeRenamer::RenamingOrchestrator.new(
+      orchestrator = BulldozeRenamer::RenamingOrchestrator.new(
         path: dir,
         current_name: 'can_of_worms',
         target_name: 'piece_of_cake'
       )
 
-      report = renamer.report_header_file_occurences + renamer.report_file_occurences
+      report = orchestrator.report_header_file_occurences + orchestrator.report_file_occurences
       expected_report = <<~EOT
       camelize
         | dasherize
@@ -46,13 +46,13 @@ RSpec.describe BulldozeRenamer::RenamingOrchestrator do
 
   it "shows only inflections that occur in a file system" do
     within_dummy_directory do |dir|
-      renamer = BulldozeRenamer::RenamingOrchestrator.new(
+      orchestrator = BulldozeRenamer::RenamingOrchestrator.new(
         path: dir,
         current_name: 'PecanIcecream',
         target_name: 'CaramelIcecream'
       )
 
-      report = renamer.report_header_file_occurences + renamer.report_file_occurences
+      report = orchestrator.report_header_file_occurences + orchestrator.report_file_occurences
 
       expected_report = <<~EOT
       dasherize
@@ -66,13 +66,13 @@ RSpec.describe BulldozeRenamer::RenamingOrchestrator do
 
   it "shows inflection for name of directory" do
     within_dummy_directory do |dir|
-      renamer = BulldozeRenamer::RenamingOrchestrator.new(
+      orchestrator = BulldozeRenamer::RenamingOrchestrator.new(
         path: dir,
         current_name: 'json-lists',
         target_name: 'js-content'
       )
 
-      report = renamer.report_header_file_occurences + renamer.report_file_occurences
+      report = orchestrator.report_header_file_occurences + orchestrator.report_file_occurences
 
       expected_report = <<~EOT
       filename
