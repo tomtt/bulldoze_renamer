@@ -60,7 +60,16 @@ RSpec.describe CrudeRenamer::FileContentSubstitutor do
     end
 
     it "does not add a newline to a file that does not have it" do
-      pending
+      original_content = "Some content before"
+      expected_content = "Some content after"
+      mappings = [["before", "after"]]
+
+      with_file_in_tmpdir 'before_file', original_content do |dir|
+        CrudeRenamer::FileContentSubstitutor.new(dir).
+        substitute_in('before_file', 'after_file', mappings)
+
+        expect(File.read(dir + '/after_file')).to eq(expected_content)
+      end
     end
   end
 

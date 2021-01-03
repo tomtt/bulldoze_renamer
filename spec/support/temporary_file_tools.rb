@@ -11,7 +11,7 @@ def add_file_to_dir(dir, path, content)
   Dir.chdir dir do
     FileUtils.mkdir_p File.dirname(path)
     File.open(path, 'w') do |f|
-      f.puts content
+      f.print content
     end
     `git init`
     `git add .`
