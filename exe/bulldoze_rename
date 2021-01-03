@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bundle exec ruby
+# This script can only be run from elsewhere if BUNDLE_GEMFILE of this project
+# has been set.
 
-PROJECT_PATH="$( cd "$(dirname "$0")/.." >/dev/null 2>&1 ; pwd -P )"
-
-BUNDLE_GEMFILE=$PROJECT_PATH/Gemfile $PROJECT_PATH/exe/bulldoze_rename_rb $*
+require 'bulldoze_renamer'
+BulldozeRenamer::Shell.start(ARGV)
