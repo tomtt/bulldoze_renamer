@@ -1,7 +1,7 @@
 require 'tmpdir'
 require 'fileutils'
 
-module CrudeRenamer
+module BulldozeRenamer
   class FileContentSubstitutor
     def initialize(dir)
       @dir = dir

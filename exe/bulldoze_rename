@@ -2,4 +2,4 @@
 
 PROJECT_PATH="$( cd "$(dirname "$0")/.." >/dev/null 2>&1 ; pwd -P )"
 
-BUNDLE_GEMFILE=$PROJECT_PATH/Gemfile $PROJECT_PATH/exe/crude_rename_rb $*
+BUNDLE_GEMFILE=$PROJECT_PATH/Gemfile $PROJECT_PATH/exe/bulldoze_rename_rb $*

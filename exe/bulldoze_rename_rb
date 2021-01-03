@@ -2,5 +2,5 @@
 # This script can only be run from elsewhere if BUNDLE_GEMFILE of this project
 # has been set.
 
-require 'crude_renamer'
-CrudeRenamer::Shell.start(ARGV)
+require 'bulldoze_renamer'
+BulldozeRenamer::Shell.start(ARGV)

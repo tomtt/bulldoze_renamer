@@ -1,6 +1,6 @@
 require 'pp'
 
-module CrudeRenamer
+module BulldozeRenamer
   class RenamingOrchestrator
     def initialize(path:, current_name:, target_name:, perform: nil)
       @path = path

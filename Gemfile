@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in crude_renamer.gemspec
+# Specify your gem's dependencies in bulldoze_renamer.gemspec
 gemspec
 
 gem "rake", "~> 12.0"

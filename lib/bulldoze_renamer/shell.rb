@@ -1,6 +1,6 @@
 require 'optparse'
 
-module CrudeRenamer
+module BulldozeRenamer
   class Shell
     BANNER = <<"EOT"
 usage: #{$0} path CurrentNameInCamelCase TargetName

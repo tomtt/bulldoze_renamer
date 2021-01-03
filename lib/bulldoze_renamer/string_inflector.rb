@@ -1,7 +1,7 @@
 require "active_support"
 require "forwardable"
 
-module CrudeRenamer
+module BulldozeRenamer
   class StringInflector
     class StringDoesNotInflectToItselfError < ArgumentError; end
 

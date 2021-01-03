@@ -1,5 +1,5 @@
 require 'bundler/setup'
-require 'crude_renamer'
+require 'bulldoze_renamer'
 require 'simplecov'
 require 'pry'
 

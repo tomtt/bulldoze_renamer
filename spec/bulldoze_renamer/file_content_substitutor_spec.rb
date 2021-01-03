@@ -1,13 +1,13 @@
 require 'support/temporary_file_tools'
 
-RSpec.describe CrudeRenamer::FileContentSubstitutor do
+RSpec.describe BulldozeRenamer::FileContentSubstitutor do
   describe "substitute_in" do
     it "preserves file content if there are no mappings" do
       content = <<~EOT
       This should remain in tact
       EOT
       with_file_in_tmpdir 'some_file', content do |dir|
-        CrudeRenamer::FileContentSubstitutor.new(dir).substitute_in('some_file', 'some_file', [])
+        BulldozeRenamer::FileContentSubstitutor.new(dir).substitute_in('some_file', 'some_file', [])
         expect(File.read(dir + '/some_file')).to eq(content)
       end
     end
@@ -35,7 +35,7 @@ RSpec.describe CrudeRenamer::FileContentSubstitutor do
       ]
 
       with_file_in_tmpdir 'some_file', original_content do |dir|
-        CrudeRenamer::FileContentSubstitutor.new(dir).substitute_in('some_file', 'some_file', mappings)
+        BulldozeRenamer::FileContentSubstitutor.new(dir).substitute_in('some_file', 'some_file', mappings)
         expect(File.read(dir + '/some_file')).to eq(expected_content)
       end
     end
@@ -50,7 +50,7 @@ RSpec.describe CrudeRenamer::FileContentSubstitutor do
         expect(FileTest.exist?(File.join(dir, 'before_file'))).to be true
         expect(`ls -al #{File.join(dir, 'before_file')}|cut -d ' ' -f 1`.strip).to eq '-rwxr-xr-x'
 
-        CrudeRenamer::FileContentSubstitutor.new(dir).
+        BulldozeRenamer::FileContentSubstitutor.new(dir).
         substitute_in('before_file', 'after_file', mappings)
 
         expect(FileTest.exist?(File.join(dir + '/before_file'))).to be false
@@ -65,7 +65,7 @@ RSpec.describe CrudeRenamer::FileContentSubstitutor do
       mappings = [["before", "after"]]
 
       with_file_in_tmpdir 'before_file', original_content do |dir|
-        CrudeRenamer::FileContentSubstitutor.new(dir).
+        BulldozeRenamer::FileContentSubstitutor.new(dir).
         substitute_in('before_file', 'after_file', mappings)
 
         expect(File.read(dir + '/after_file')).to eq(expected_content)
@@ -78,7 +78,7 @@ RSpec.describe CrudeRenamer::FileContentSubstitutor do
       with_directory_in_tmpdir 'ducks/fictive/mallards' do |dir|
         expect(FileTest.directory?(File.join(dir, 'ducks/fictive/mallards'))).to be true
 
-        CrudeRenamer::FileContentSubstitutor.new(dir).
+        BulldozeRenamer::FileContentSubstitutor.new(dir).
         move_directory('ducks/fictive', 'ducks/cartoon')
 
         expect(FileTest.directory?(File.join(dir, 'ducks/fictive/mallards'))).to be false

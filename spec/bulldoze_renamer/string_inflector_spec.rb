@@ -1,4 +1,4 @@
-RSpec.describe CrudeRenamer::StringInflector do
+RSpec.describe BulldozeRenamer::StringInflector do
   describe "mappings" do
     it "has all mappings for underscored strings" do
       expected_mappings = {
@@ -12,7 +12,7 @@ RSpec.describe CrudeRenamer::StringInflector do
           js_camelize: {current: "drWho", target: "rogerRabbit"}
         }
       }
-      expect(CrudeRenamer::StringInflector.new('dr_who', 'roger_rabbit').mappings).to eq(expected_mappings)
+      expect(BulldozeRenamer::StringInflector.new('dr_who', 'roger_rabbit').mappings).to eq(expected_mappings)
     end
 
     it "omits duplicate mappings for simple strings" do
@@ -25,7 +25,7 @@ RSpec.describe CrudeRenamer::StringInflector do
           upcase: { current: "RICK", target: "MORTY" }
         }
       }
-      expect(CrudeRenamer::StringInflector.new('Rick', 'Morty').mappings).to eq(expected_mappings)
+      expect(BulldozeRenamer::StringInflector.new('Rick', 'Morty').mappings).to eq(expected_mappings)
     end
 
     it "defers inflecting to active_support" do
@@ -64,18 +64,18 @@ RSpec.describe CrudeRenamer::StringInflector do
         }
       }
 
-      result = CrudeRenamer::StringInflector.new('mockedInflectorCamelize', 'MOCKED_INFLECTOR_UNDERSCORE').mappings
+      result = BulldozeRenamer::StringInflector.new('mockedInflectorCamelize', 'MOCKED_INFLECTOR_UNDERSCORE').mappings
       expect(result).to eq(expected_mappings)
     end
 
     it "raises an error if the current string does not map to any of the inflections" do
-      expect(-> { CrudeRenamer::StringInflector.new('current does-Not_Reflect', 'whatevs').mappings }).
-      to raise_error(CrudeRenamer::StringInflector::StringDoesNotInflectToItselfError, "current does-Not_Reflect")
+      expect(-> { BulldozeRenamer::StringInflector.new('current does-Not_Reflect', 'whatevs').mappings }).
+      to raise_error(BulldozeRenamer::StringInflector::StringDoesNotInflectToItselfError, "current does-Not_Reflect")
     end
 
     it "raises an error if the target string does not map to any of the inflections" do
-      expect(-> { CrudeRenamer::StringInflector.new('whatevs', 'target does-Not_Reflect').mappings }).
-      to raise_error(CrudeRenamer::StringInflector::StringDoesNotInflectToItselfError, "target does-Not_Reflect")
+      expect(-> { BulldozeRenamer::StringInflector.new('whatevs', 'target does-Not_Reflect').mappings }).
+      to raise_error(BulldozeRenamer::StringInflector::StringDoesNotInflectToItselfError, "target does-Not_Reflect")
     end
 
     it "dasherizes camelcased current" do
@@ -90,7 +90,7 @@ RSpec.describe CrudeRenamer::StringInflector do
           js_camelize: {current: "drWho", target: "rogerRabbit"}
         }
       }
-      expect(CrudeRenamer::StringInflector.new('DrWho', 'RogerRabbit').mappings).to eq(expected_mappings)
+      expect(BulldozeRenamer::StringInflector.new('DrWho', 'RogerRabbit').mappings).to eq(expected_mappings)
     end
 
     it "excludes mappings that are identical for current but different for target" do
@@ -103,7 +103,7 @@ RSpec.describe CrudeRenamer::StringInflector do
           upcase: { current: "JERRY", target: "ROGER_RABBIT" }
         }
       }
-      expect(CrudeRenamer::StringInflector.new('Jerry', 'RogerRabbit').mappings).to eq(expected_mappings)
+      expect(BulldozeRenamer::StringInflector.new('Jerry', 'RogerRabbit').mappings).to eq(expected_mappings)
     end
   end
 end

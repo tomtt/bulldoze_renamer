@@ -1,7 +1,7 @@
 require 'find'
 require 'filemagic'
 
-module CrudeRenamer
+module BulldozeRenamer
   class FileFinder
     def self.file_magic
       @@file_magic ||= FileMagic.new

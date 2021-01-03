@@ -1,6 +1,6 @@
 require 'support/temporary_file_tools'
 
-RSpec.describe CrudeRenamer::RenamingOrchestrator do
+RSpec.describe BulldozeRenamer::RenamingOrchestrator do
   def within_dummy_directory
     within_tmpdir do |dir|
       add_file_to_dir(dir, 'json-lists/cupboard_items.js', <<~EOT
@@ -23,7 +23,7 @@ RSpec.describe CrudeRenamer::RenamingOrchestrator do
 
   it "shows occurences in a file system" do
     within_dummy_directory do |dir|
-      renamer = CrudeRenamer::RenamingOrchestrator.new(
+      renamer = BulldozeRenamer::RenamingOrchestrator.new(
         path: dir,
         current_name: 'can_of_worms',
         target_name: 'piece_of_cake'
@@ -46,7 +46,7 @@ RSpec.describe CrudeRenamer::RenamingOrchestrator do
 
   it "shows only inflections that occur in a file system" do
     within_dummy_directory do |dir|
-      renamer = CrudeRenamer::RenamingOrchestrator.new(
+      renamer = BulldozeRenamer::RenamingOrchestrator.new(
         path: dir,
         current_name: 'PecanIcecream',
         target_name: 'CaramelIcecream'
@@ -66,7 +66,7 @@ RSpec.describe CrudeRenamer::RenamingOrchestrator do
 
   it "shows inflection for name of directory" do
     within_dummy_directory do |dir|
-      renamer = CrudeRenamer::RenamingOrchestrator.new(
+      renamer = BulldozeRenamer::RenamingOrchestrator.new(
         path: dir,
         current_name: 'json-lists',
         target_name: 'js-content'

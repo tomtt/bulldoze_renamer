@@ -1,8 +1,8 @@
-require_relative 'lib/crude_renamer/version'
+require_relative 'lib/bulldoze_renamer/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "crude_renamer"
-  spec.version       = CrudeRenamer::VERSION
+  spec.name          = "bulldoze_renamer"
+  spec.version       = BulldozeRenamer::VERSION
   spec.authors       = ["Tom ten Thij"]
   spec.email         = ["code@tomtenthij.nl"]
 
