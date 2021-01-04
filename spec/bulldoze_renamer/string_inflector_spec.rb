@@ -15,6 +15,21 @@ RSpec.describe BulldozeRenamer::StringInflector do
       expect(BulldozeRenamer::StringInflector.new('dr_who', 'roger_rabbit').mappings).to eq(expected_mappings)
     end
 
+    it "has all mappings for dasherized strings" do
+      expected_mappings = {
+        current_inflection: :dasherize,
+        target_inflection: :dasherize,
+        inflections: {
+          underscore: { current: "dr_who", target: "roger_rabbit" },
+          camelize: { current: "DrWho", target: "RogerRabbit" },
+          dasherize: { current: "dr-who", target: "roger-rabbit" },
+          upcase: { current: "DR_WHO", target: "ROGER_RABBIT" },
+          js_camelize: {current: "drWho", target: "rogerRabbit"}
+        }
+      }
+      expect(BulldozeRenamer::StringInflector.new('dr-who', 'roger-rabbit').mappings).to eq(expected_mappings)
+    end
+
     it "omits duplicate mappings for simple strings" do
       expected_mappings = {
         current_inflection: :camelize,

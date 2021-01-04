@@ -8,11 +8,11 @@ module BulldozeRenamer
     extend Forwardable
 
     def self.active_support_inflections
-      [:underscore, :camelize]
+      [:underscore]
     end
 
     def self.inflections
-      active_support_inflections + [:dasherize, :upcase, :js_camelize]
+      active_support_inflections + [:camelize, :dasherize, :upcase, :js_camelize]
     end
 
     def_delegators ActiveSupport::Inflector, *StringInflector.active_support_inflections
@@ -26,7 +26,13 @@ module BulldozeRenamer
       underscore(w).upcase
     end
 
+    def camelize(w)
+      # Wrapping AR camelize because it would return 'dr-who' as 'Dr-who', we want 'DrWho'
+      ActiveSupport::Inflector.camelize(underscore(w))
+    end
+
     def dasherize(w)
+      # Wrapping AR dasherize because it would return 'DrWho' as 'DrWho', we want 'dr-who'
       ActiveSupport::Inflector.dasherize(underscore(w))
     end
 
