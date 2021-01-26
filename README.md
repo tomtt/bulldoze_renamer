@@ -12,6 +12,12 @@ and so that file should be renamed `lib/bears/pooh_bear -> lib/bears/honey_bear`
 
 This tool aims to do all those replacements for you in the entire project in one go.
 
+## Dependencies
+
+libmagic is a dependency that should be available for your OS. E.g. using brew on OSX:
+
+    $ brew install libmagic
+
 ## Installation
 
 Install by installing the gem:
