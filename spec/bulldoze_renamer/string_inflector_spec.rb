@@ -84,12 +84,12 @@ RSpec.describe BulldozeRenamer::StringInflector do
     end
 
     it "raises an error if the current string does not map to any of the inflections" do
-      expect(-> { BulldozeRenamer::StringInflector.new('current does-Not_Reflect', 'whatevs').mappings }).
+      expect { BulldozeRenamer::StringInflector.new('current does-Not_Reflect', 'whatevs').mappings }.
       to raise_error(BulldozeRenamer::StringInflector::StringDoesNotInflectToItselfError, "current does-Not_Reflect")
     end
 
     it "raises an error if the target string does not map to any of the inflections" do
-      expect(-> { BulldozeRenamer::StringInflector.new('whatevs', 'target does-Not_Reflect').mappings }).
+      expect { BulldozeRenamer::StringInflector.new('whatevs', 'target does-Not_Reflect').mappings }.
       to raise_error(BulldozeRenamer::StringInflector::StringDoesNotInflectToItselfError, "target does-Not_Reflect")
     end
 

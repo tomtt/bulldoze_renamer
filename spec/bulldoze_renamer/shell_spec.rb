@@ -5,13 +5,13 @@ RSpec.describe BulldozeRenamer::Shell do
   it "exits without replacing if no argument is passed" do
     argv = []
     expect(err_double).to receive(:puts).with ::BulldozeRenamer::Shell::BANNER
-    expect(lambda { ::BulldozeRenamer::Shell.start( argv, out: out_double, err: err_double) }).to raise_error SystemExit
+    expect{::BulldozeRenamer::Shell.start( argv, out: out_double, err: err_double)}.to raise_error SystemExit
   end
 
   it "exits without replacing if one argument is passed" do
     argv = ['one']
     expect(err_double).to receive(:puts).with ::BulldozeRenamer::Shell::BANNER
-    expect(lambda { ::BulldozeRenamer::Shell.start( argv, out: out_double, err: err_double) }).to raise_error SystemExit
+    expect{::BulldozeRenamer::Shell.start( argv, out: out_double, err: err_double)}.to raise_error SystemExit
   end
 
   it "performs a replace if there are exactly two arguments" do
@@ -34,7 +34,7 @@ RSpec.describe BulldozeRenamer::Shell do
   it "exits without replacing if more than two arguments are passed" do
     argv = ['.', 'one', 'two', 'three']
     expect(err_double).to receive(:puts).with ::BulldozeRenamer::Shell::BANNER
-    expect(lambda { ::BulldozeRenamer::Shell.start( argv, out: out_double, err: err_double) }).to raise_error SystemExit
+    expect{::BulldozeRenamer::Shell.start( argv, out: out_double, err: err_double)}.to raise_error SystemExit
     expect(::BulldozeRenamer::RenamingOrchestrator).not_to receive(:rename_with_options)
   end
 
