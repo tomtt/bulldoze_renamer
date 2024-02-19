@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Tom ten Thij"]
   spec.email         = ["code@tomtenthij.nl"]
 
-  spec.summary       = %q{A gem environment to learn code in}
+  spec.summary       = %q{A command line tool to bulk rename classes and variables in ruby projects}
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
   # Specify which files should be added to the gem when it is released.
