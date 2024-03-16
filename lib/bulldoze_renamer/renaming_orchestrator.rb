@@ -171,7 +171,12 @@ module BulldozeRenamer
     end
 
     def self.rename_with_options(options, out:, err:)
-      orch = RenamingOrchestrator.new(options)
+      orch = RenamingOrchestrator.new(
+         current_name: options[:current_name],
+         target_name: options[:target_name],
+         path: options[:path],
+         perform: options[:perform]
+      )
       out.puts orch.report_inflections_mapping
 
       if orch.files_that_have_occurences.empty?
